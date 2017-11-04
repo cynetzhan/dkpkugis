@@ -1,0 +1,2 @@
+[Mon May 22 16:06:59.334641 2017] [core:error] [pid 6247] (13)Permission denied: [client 127.0.0.1:49606] AH00035: access to / denied (filesystem path '/media/ekawdr/0E4A942D4A941395') because search permissions are missing on a component of the path
+[Mon May 22 16:07:06.172609 2017] [core:error] [pid 6248] (13)Permission denied: [client 127.0.0.1:52642] AH00035: access to / denied (filesystem path '/media/ekawdr/0E4A942D4A941395') because search permissions are missing on a component of the path

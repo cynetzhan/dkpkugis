@@ -50,11 +50,11 @@ if ($can_delete) {
 					<?php endif;?>
 					
 				<?php if ($can_edit) : ?>
-					<td><?php echo anchor(SITE_AREA . '/content/pengangkutan_sampah/edit/' . $record->id_laporan, '<span class="icon-pencil"></span> ' .  $record->id_user); ?></td>
+					<td><?php echo anchor(SITE_AREA . '/content/pengangkutan_sampah/edit/' . $record->id_laporan, '<span class="icon-pencil"></span> ' .  $record->display_name); ?></td>
 				<?php else : ?>
-					<td><?php e($record->id_user); ?></td>
+					<td><?php e($record->display_name); ?></td>
 				<?php endif; ?>
-					<td><?php e($record->id_tps); ?></td>
+					<td><?php e($record->nama); ?></td>
 					<td><?php e($record->tanggal_angkut); ?></td>
 					<td><?php e($record->waktu_angkut); ?></td>
 				</tr>

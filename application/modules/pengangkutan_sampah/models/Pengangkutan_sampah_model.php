@@ -74,7 +74,7 @@ class Pengangkutan_sampah_model extends BF_Model
     }
     
     public function find_all_joined(){
-     $this->db->select('bf_users.display_name, bf_tps.nama, tanggal_angkut, waktu_angkut');
+     $this->db->select('id_laporan, id_user, bf_users.display_name, bf_tps.nama, tanggal_angkut, waktu_angkut');
      $this->db->where('bf_laporangkut.id_user = bf_users.id and bf_laporangkut.id_tps = bf_tps.id');
      return $this->db->get('bf_laporangkut, bf_users, bf_tps')->result();
     }

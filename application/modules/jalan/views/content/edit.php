@@ -20,17 +20,36 @@ $id = isset($jalan->id) ? $jalan->id : '';
 
 
 echo Assets::css('leaflet.css');
-
+echo Assets::css('leaflet.draw.css');
 echo Assets::js( 
 	array('leaflet-src.js'
 		, 'Leaflet.draw.js'
 		, 'Leaflet.Draw.Event.js'
+		, 'Toolbar.js'
+		, 'Tooltip.js'
+		, 'ext/GeometryUtil.js'
+		, 'ext/LatLngUtil.js'
+		, 'ext/LineUtil.Intersect.js'
+		, 'ext/Polygon.Intersect.js'
+		, 'ext/Polyline.Intersect.js'
 		, 'ext/TouchEvents.js'
+		, 'draw/DrawToolbar.js'
+		, 'draw/handler/Draw.Feature.js'
+		, 'draw/handler/Draw.SimpleShape.js'
+		, 'draw/handler/Draw.Polyline.js'
+		, 'draw/handler/Draw.Circle.js'
+		, 'draw/handler/Draw.Marker.js'
+		, 'draw/handler/Draw.Polygon.js'
+		, 'draw/handler/Draw.Rectangle.js'
+		, 'edit/EditToolbar.js'
+		, 'edit/handler/EditToolbar.Edit.js'
+		, 'edit/handler/EditToolbar.Delete.js'
+		, 'Control.Draw.js'
 		, 'edit/handler/Edit.Poly.js'
 		, 'edit/handler/Edit.SimpleShape.js'
-	//	, 'edit/handler/Edit.Circle.js'
-	//	, 'edit/handler/Edit.Rectangle.js'
-	//	, 'edit/handler/Edit.Marker.js'
+		, 'edit/handler/Edit.Circle.js'
+		, 'edit/handler/Edit.Rectangle.js'
+		, 'edit/handler/Edit.Marker.js'
 	), 'external' ); //external or inline
 ?>
 
@@ -104,13 +123,74 @@ echo Assets::js(
 
 
 	<script>
-		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			osm = L.tileLayer(osmUrl, {
-				//maxZoom: 18, 
-				attribution: osmAttrib});
+		var kecamatanColors = {
+    	"Bukit Raya": "rgba(210,199,72,1.0)",
+    	"Lima Puluh": "rgba(130,233,209,1.0)",
+    	"Marpoyan Damai": "rgba(46,187,230,1.0)",
+    	"Payung Sekaki": "rgba(132,116,220,1.0)",
+    	"Pekanbaru": "rgba(218,63,63,1.0)",
+    	"Rumbai": "rgba(107,214,139,1.0)",
+    	"Rumbai Pesisir": "rgba(162,218,72,1.0)",
+    	"Sail": "rgba(221,112,212,1.0)",
+    	"Senapelan": "rgba(121,151,219,1.0)",
+    	"Sukajadi": "rgba(204,156,117,1.0)",
+    	"Tampan": "rgba(89,222,62,1.0)",
+    	"Tenayan Raya": "rgba(159,78,209,1.0)"
+    };
+
+    /** fungsi untuk style kelurahan dikategorikan ke kecamatan
+     */
+    function style_kelurahan(feature) {
+    	return {
+    		opacity: 0.5,
+    		color: 'rgba(0,0,0,0.1)',
+    		dashArray: '',
+    		lineCap: 'butt',
+    		lineJoin: 'miter',
+    		weight: 1.0,
+    		fillOpacity: 0.1,
+    		fillColor: kecamatanColors[feature.properties['Kecamatan']]
+    	};
+    }
+
+    var pekanbaru = L.geoJson(null, {
+    		style: style_kelurahan,
+    		onEachFeature: function (feature, layer) {
+    			//tampilkan modal kalau kelurahan di click
+    			layer.on({
+    				click: function (e) {
+    					highlight.clearLayers().addLayer(
+    						L.marker([lat, lng], {
+    							icon: L.icon({
+    								iconUrl: "<?= base_url() ?>assets/images/bin.png",
+    								iconSize: [24, 28],
+    								iconAnchor: [12, 28],
+    								popupAnchor: [0, -25]
+    							}),
+    							riseOnHover: true
+    						}));
+    					$("span#coord").html(lat + ", " + lng);
+    					$("input#lat").val(lat);
+    					$("input#long").val(lng);
+    					$("input#zoom").val(map.getZoom());
+    				}
+    			});
+    		}
+    	});
+    $.getJSON("<?= base_url('data/kelurahan.php') ?>", function (data) {
+    	pekanbaru.addData(data);
+    });
+    var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
+    		maxZoom: 19,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+    	});
+    var googleMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+    		maxZoom: 20,
+    		subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    		attribution: "Provided by <a href='http://maps.google.com'>Google Maps</a>"
+    	});
 			map = new L.Map('map', {
-				layers: [osm]
+				layers: [cartoLight, pekanbaru]
 				, center: new L.LatLng(0.51861, 101.44728)
 				, zoom: 18});
 
@@ -134,9 +214,35 @@ echo Assets::js(
 		map.fitBounds(polyline.getBounds());
 
 		polyline.editing.enable();
+  drawnItems = L.featureGroup([polyline]).addTo(map);
 
-		map.addLayer(polyline);
-
+		//map.addLayer(polyline);
+  
+  L.control.layers(
+    {
+     'OpenStreetMap': cartoLight,
+     'Google Maps': googleMap
+    }, {
+    	'Layer Titik Rute': drawnItems
+    }, {
+    	position: 'bottomright',
+    	collapsed: false
+    }).addTo(map);
+    map.addControl(new L.Control.Draw({
+    		edit: {
+    			featureGroup: drawnItems,
+    			poly: {
+    				allowIntersection: false
+    			}
+    		},
+    		draw: {
+    			polygon: {
+    				allowIntersection: false,
+    				showArea: true
+    			}
+    		},
+    		position: 'topright'
+    	}));
 		// saat di edit, jangan lupa update textarea kita agar bisa disimpa di MySQL
 		// perhatikan bahwa kita perlu ambil bentuk GeoJSON dulu dari polyline kita, lalu ambil koordinatnya
 		polyline.on('edit', function() {

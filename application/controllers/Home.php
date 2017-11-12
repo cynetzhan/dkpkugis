@@ -38,6 +38,7 @@ class Home extends MX_Controller
 		$this->load->library('Assets');
 		$this->lang->load('application');
 		$this->load->library('events');
+  $this->load->model('profil/profil_model');
 
         $this->load->library('installer_lib');
         if (! $this->installer_lib->is_installed()) {
@@ -71,6 +72,56 @@ class Home extends MX_Controller
   $this->load->library('users/auth');
   $this->set_current_user();
   Template::set('hal','GIS');
+  Template::render();
+ }
+ 
+ public function profil($id){
+  $this->load->library('users/auth');
+  $this->set_current_user();
+  
+  $profil=$this->profil_model->find($id);
+  $prolist=$this->profil_model->find_all();
+  //echo var_dump($profil);
+  Template::set('profil',$profil);
+  Template::set('prolist',$prolist);
+  Template::render();
+ }
+ 
+ public function aksi_lapor(){
+  $this->load->model('laporan_masyarakat/laporan_masyarakat_model');
+  $data = $this->laporan_masyarakat_model->prep_data($this->input->post());
+  $config['upload_path']   = 'data/images/';
+  $config['allowed_types'] = 'gif|jpg|png|jpeg';
+  $config['max_size']      = 2048;
+  $config['file_name']     = $data['nama_pe_laporanmas']."-".date('ymdhis');
+  $this->load->library('upload', $config);
+
+  if ( ! $this->upload->do_upload('foto_laporanmas') && ! $this->upload->data('is_image') ){
+    $error = array('error' => $this->upload->display_errors());
+    if($error['error'] == "You did not select a file to upload."){
+     $this->flashMsg($this->upload->display_errors(),"","");
+     //echo $this->upload->display_errors();
+    }
+    $data['foto_laporanmas'] = '';
+  } else {
+    $data['foto_laporanmas'] = $this->upload->data('file_name');
+  }
+  $data['tgl_laporanmas'] = date('Y-m-d h:i:s');
+  $data['status_laporan'] = 0;
+  
+  if($this->laporan_masyarakat_model->insert($data)){
+   $this->load->model('tps/tps_model');
+   Template::set('success',true);
+   Template::set('datalapor',$data);
+   Template::set('tps',$this->tps_model->find($data['id_tps']));
+   Template::set('judul','Laporan Telah Diterima!');
+  } else {
+   Template::set('success',false);
+   Template::set('judul','Gagal Mengirim Laporan!');
+  }
+  //echo var_dump($data);
+  
+  Template::set_view('home/message');
   Template::render();
  }
 

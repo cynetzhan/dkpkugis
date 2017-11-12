@@ -46,8 +46,18 @@
         </div>
         <div class="navbar-collapse collapse" id="bs-navbar">
           <ul class="nav navbar-nav">
-            <li><a href="#" >Visi dan Misi</a></li>
-            <li><a href="#" >Struktur Organisasi</a></li>
+            <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Profil</a>
+             <ul class="dropdown-menu">
+              <?php
+              $this->load->model('profil/profil_model');
+              $profil = $this->profil_model->find_all();
+              foreach($profil as $atk){ ?>
+              <li><a href="<?= base_url('home/profil/'.$atk->id_profil) ?>"><?= $atk->judul_profil ?></a></li>
+              <?php } ?>
+             </ul>
+            </li>
+            <li><a href="<?= base_url('home/gis') ?>" >Peta TPS</a></li>
             <!--li class="hidden-xs"><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="list-btn"><i class="fa fa-list white"></i>&nbsp;&nbsp;POI List</a></li-->
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -57,6 +67,7 @@
            <li <?php echo check_method('profile'); ?>><a href="<?php echo site_url('users/profile'); ?>"><?php e(lang('bf_user_settings')); ?></a></li>
            <li><a href="<?php echo site_url('logout'); ?>"><?php e(lang('bf_action_logout')); ?></a></li>
            <?php endif; ?>
+           </ul>
           </div>
         </div><!--/.navbar-collapse -->
       </div>

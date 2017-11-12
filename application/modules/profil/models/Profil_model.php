@@ -1,9 +1,9 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
 
-class Jalan_model extends BF_Model
+class Profil_model extends BF_Model
 {
-    protected $table_name	= 'rute';
-	protected $key			= 'id';
+    protected $table_name	= 'profil';
+	protected $key			= 'id_profil';
 	protected $date_format	= 'datetime';
 
 	protected $log_user 	= false;
@@ -40,14 +40,19 @@ class Jalan_model extends BF_Model
 	// be updating a portion of the data.
 	protected $validation_rules 		= array(
 		array(
-			'field' => 'nama',
-			'label' => 'lang:jalan_field_nama',
-			'rules' => 'max_length[50]',
+			'field' => 'judul_profil',
+			'label' => 'lang:profil_field_judul_profil',
+			'rules' => 'required|max_length[30]',
 		),
 		array(
-			'field' => 'geom',
-			'label' => 'lang:jalan_field_geom',
+			'field' => 'tgl_terbit_profil',
+			'label' => 'lang:profil_field_tgl_terbit_profil',
 			'rules' => 'required',
+		),
+		array(
+			'field' => 'isi_profil',
+			'label' => 'lang:profil_field_isi_profil',
+			'rules' => '',
 		),
 	);
 	protected $insert_validation_rules  = array();

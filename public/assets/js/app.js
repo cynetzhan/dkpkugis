@@ -107,7 +107,12 @@ var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
 	});
-var usgsImagery = L.layerGroup([L.tileLayer("http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", {
+var googleMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+    maxZoom: 20,
+    subdomains: ['mt0','mt1','mt2','mt3'],
+    attribution: "Provided by Google Maps"
+});
+	var usgsImagery = L.layerGroup([L.tileLayer("http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", {
 				maxZoom: 15,
 			}), L.tileLayer.wms("http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer?", {
 				minZoom: 16,
@@ -295,8 +300,8 @@ tps = L.geoJson(null, {
 						$("#feature-title").html(feature.properties.nama);
 						$("#feature-info").html(content);
 						$("input#form_id_tps").val(feature.properties.id);
-						$("input#form_id_kec").val(feature.properties.Kecamatan)
-						$("input#form_id_kel").val(feature.properties.Kelurahan)
+						$("input#form_id_kec").val(feature.properties.kecamatan)
+						$("input#form_id_kel").val(feature.properties.kelurahan)
 						$("#span_id_tps").html(feature.properties.nama);
 						$("#span_id_kec").html(feature.properties.kecamatan)
 						$("#span_id_kel").html(feature.properties.kelurahan)
@@ -423,8 +428,8 @@ if (document.body.clientWidth <= 767) {
 }
 
 var baseLayers = {
-	"Street Map": cartoLight,
-	"Aerial Imagery": usgsImagery
+	"OpenStreetMap": cartoLight,
+	"Google Maps": googleMap
 };
 
 var groupedOverlays = {

@@ -64,7 +64,7 @@
              <div class="tab-pane fade active in" id="feature-info"></div>
              <div class="tab-pane fade in" id="form-aduan">
              <br>
-              <form method="post" name="formaduan" class="form-horizontal">
+              <?php echo form_open_multipart(base_url('home/aksi_lapor'),'name="formaduan" class="form-horizontal"'); ?>
                <div class="form-group row">
                 <label class="control-label col-sm-4" >Nama Anda<br><small style="color:red"><em>(*)</em></small></label>
                 <div class="col-sm-8">
@@ -113,12 +113,17 @@
                  <input type='file' class="form-control" name="foto_laporanmas" />
                 </div>
                </div>
+               <div class="form-group row">
+                <div class="col-sm-offset-8 col-sm-4">
+                 <button type="submit" class="btn btn-primary"  name="submit" style="float:right">Kirim Laporan</button>
+                </div>
+               </div>
               </form>
              </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

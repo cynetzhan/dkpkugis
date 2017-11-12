@@ -202,15 +202,19 @@ echo Assets::js( array('leaflet-src.js'
       $.getJSON("<?= base_url('data/kelurahan.php') ?>", function (data) {
       	pekanbaru.addData(data);
       });
-      var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      osm = L.tileLayer(osmUrl, {
-       //maxZoom: 18, 
-       attribution: osmAttrib});
-      map = L.map("map", {
+      var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
+    		maxZoom: 19,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+    	});
+    var googleMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+    		maxZoom: 20,
+    		subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    		attribution: "Provided by <a href='http://maps.google.com'>Google Maps</a>"
+    	});
+      var map = L.map("map", {
       		
       		center: [$("input#lat").val(), $("input#long").val()],
-      		layers: [osm, pekanbaru, highlight],
+      		layers: [cartoLight, pekanbaru, highlight],
       		zoomControl: true,
       		attributionControl: true,
         zoom: $("input#zoom").val(),
@@ -218,6 +222,17 @@ echo Assets::js( array('leaflet-src.js'
       map.on("click", function (e) {
       	highlight.clearLayers();
       });
+      drawnItems = L.featureGroup().addTo(map);
+    
+    L.control.layers({
+     'OpenStreetMap': cartoLight,
+     'Google Maps': googleMap
+    }, {
+    	'Layer Titik Gambar': highlight
+    }, {
+    	position: 'bottomright',
+    	collapsed: false
+    }).addTo(map);
 
       map.on("mousemove", function (ev) {
       	lat = ev.latlng.lat;

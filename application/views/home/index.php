@@ -22,24 +22,28 @@
   <div class="col-sm-10 col-sm-offset-1">
    <div class="row">
     <div class="col-sm-4">
+   <a href="<?= base_url('home/profil/1') ?>">
    <div class="thumbnail">
-    <img class="img-rounded" src="images/kota-pekanbaru.jpg?width=200&height=120" />
-    <p class="text-center"><strong>Lihat Informasi TPS</strong></p>
-    <p>Anda dapat melihat lorem ipsum dolor sit amet pada tautan diatas</p>
+    <img class="img-rounded" src="assets/images/dkp.jpg" />
+    <h4 class="text-center">Profil DKP Pekanbaru</h4>
+    <p class="text-center">Lihat Visi Misi dan Profil Lengkap DKP Pekanbaru</p>
    </div>
+   </a>
+  </div>
+  <div class="col-sm-4">
+   <a href="<?= base_url('home/gis') ?>">
+   <div class="thumbnail">
+    <img class="img-rounded" src="assets/images/dkp.jpg" />
+    <h4 class="text-center">Sistem Informasi Geografis TPS Pekanbaru</h4>
+    <p class='text-center'>Cari tahu mengenai Lokasi TPS dan laporkan masalah mengenai TPS di Pekanbaru</p>
+   </div>
+   </a>
   </div>
   <div class="col-sm-4">
    <div class="thumbnail">
-    <img class="img-rounded" src="images/kota-pekanbaru.jpg?width=200&height=120" />
-    <p>Lihat Informasi TPS</p>
-    <p>Anda dapat melihat lorem ipsum dolor sit amet pada tautan diatas</p>
-   </div>
-  </div>
-  <div class="col-sm-4">
-   <div class="thumbnail">
-    <img class="img-rounded" src="images/kota-pekanbaru.jpg?width=200&height=120" />
-    <p>Lihat Informasi TPS</p>
-    <p>Anda dapat melihat lorem ipsum dolor sit amet pada tautan diatas</p>
+    <img class="img-rounded" src="assets/images/dkp.jpg" />
+    <h4 class="text-center">Berita dan Informasi Publik</h4>
+    <p class="text-center">Lihat berita dan pengumuman mengenai Kebersihan dan Pertamanan Kota Pekanbaru</p>
    </div>
   </div>
    </div>

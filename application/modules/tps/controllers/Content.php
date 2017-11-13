@@ -179,8 +179,7 @@ class Content extends Admin_Controller
 
         // Additional handling for default values should be added below,
         // or in the model's prep_data() method
-        
-
+        $data['file_foto']='';
         $return = false;
         if ($type == 'insert') {
             $id = $this->tps_model->insert($data);
@@ -191,6 +190,30 @@ class Content extends Admin_Controller
         } elseif ($type == 'update') {
             $return = $this->tps_model->update($id, $data);
         }
+        if($type == 'insert'){
+         $id=$this->db->insert_id();
+        }
+        $data = array();
+        $config['upload_path']   = 'data/images/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = 2048;
+        $config['file_name']     = "TPS-".$id;
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('images') && ! $this->upload->data('is_image') ){
+          $error = array('error' => $this->upload->display_errors());
+          if($error['error'] == "You did not select a file to upload."){
+           $this->flashMsg($this->upload->display_errors(),"","");
+           //echo $this->upload->display_errors();
+          }
+          if($type != 'update'){
+           $data['file_foto'] = '';
+          }
+        } else {
+          $data['file_foto'] = $this->upload->data('file_name');
+        }
+        
+        $this->tps_model->update($id,$data);
 
         return $return;
     }

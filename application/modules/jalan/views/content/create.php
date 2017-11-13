@@ -57,7 +57,7 @@ echo Assets::js(
 <div class='admin-box'>
     <h3>jalan</h3>
     <?php echo form_open($this->uri->uri_string(), 'class="form-horizontal"'); ?>
-        <div class="column size1of2 fist-column">
+        <div class="column size1of2 first-column">
         
 		<fieldset>
             

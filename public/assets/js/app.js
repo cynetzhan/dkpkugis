@@ -294,6 +294,7 @@ tps = L.geoJson(null, {
 					 + "<tr><th>Keterangan</th><td>" + feature.properties.ket + "</td></tr>"
 					 + "<tr><th>Luas</th><td>" + feature.properties.luas + "</td></tr>"
 					 + "<tr><th>Volume</th><td>" + feature.properties.volume + "</td></tr>"
+                     + "<tr><td colspan='2'>Foto TPS<br> <img class='img-responsive' src='../data/images/" + feature.properties.foto + "' alt='Foto TPS tidak tersedia' /></td></tr>"
 					 + "<table>";
 				layer.on({
 					click: function (e) {

@@ -26,7 +26,8 @@ header('Content-type: text/plain');
             "ket": "<?php echo $records[$i]->keterangan;?>",
             "lat": "<?php echo $records[$i]->lat;?>",
             "long": "<?php echo $records[$i]->long;?>",
-            "zoom": "<?php echo $records[$i]->zoom;?>"
+            "zoom": "<?php echo $records[$i]->zoom;?>",
+            "foto": "<?php echo $records[$i]->file_foto;?>"
 		}
 		,"geometry": {
             "type": "Point",

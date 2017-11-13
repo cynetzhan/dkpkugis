@@ -58,10 +58,9 @@ echo Assets::js(
 ?>
 <div class='admin-box'>
     <h3>tps</h3>
-    <?php echo form_open($this->uri->uri_string(), 'class="form-horizontal"'); ?>
+    <?php echo form_open_multipart($this->uri->uri_string(), 'class="form-horizontal"'); ?>
+        <div class="column size1of2 first-column">
         <fieldset>
-            
-
             <div class="control-group<?php echo form_error('nama') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('tps_field_nama') . lang('bf_form_label_required'), 'nama', array('class' => 'control-label')); ?>
                 <div class='controls'>
@@ -133,7 +132,7 @@ echo Assets::js(
                     <span class='help-inline'><?php echo form_error('long'); ?></span>
                 </div>
             </div>
-
+            
             <div class="control-group<?php echo form_error('zoom') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('tps_field_zoom'), 'zoom', array('class' => 'control-label')); ?>
                 <div class='controls'>
@@ -142,9 +141,17 @@ echo Assets::js(
                 </div>
             </div>
             <div class="control-group">
-             <div id="map" style="min-width: 300px; min-height: 400px; border: 1px solid #ccc"></div>
+                <?php echo form_label('Foto TPS', 'images', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <input id='images' type='file' name='images'/>
+                </div>
             </div>
         </fieldset>
+        </div>
+        <div class="column size1of2 last-column">
+         <div id="map" style="min-width: 300px; min-height: 400px; border: 1px solid #ccc"></div>
+        </div>
+       </div>
         <fieldset class='form-actions'>
             <input type='submit' name='save' class='btn btn-primary' value="<?php echo lang('tps_action_create'); ?>" />
             <?php echo lang('bf_or'); ?>
@@ -152,7 +159,7 @@ echo Assets::js(
             
         </fieldset>
     <?php echo form_close(); ?>
-</div>
+
 
 
 			

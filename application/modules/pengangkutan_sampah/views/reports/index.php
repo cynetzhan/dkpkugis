@@ -13,18 +13,18 @@ if ($can_delete) {
 	<h3>
 		<?php echo lang('pengangkutan_sampah_area_title'); ?>
 	</h3>
- <form name="tanggal" method="post">
+ <?= form_open("admin/reports/pengangkutan_sampah/",'name="tanggal"') ?>
  <div class="form-group">
   <label class="form-label" for="tanggal_awal">Dari</label>
-  <input type="date" name="tanggal_awal" id="tanggal_awal" value="<?= date('Y-m-d') ?>" class="form-control"/>
+  <input type="date" name="tanggal_awal" id="tanggal_awal" value="<?= $tgl[0] ?>" class="form-control"/>
  </div>
  <div class="form-group">
   <label class="form-label" for="tanggal_akhir">Hingga</label>
-  <input type="date" name="tanggal_akhir" id="tanggal_akhir" value="<?= date('Y-m-d') ?>" class="form-control"/>
+  <input type="date" name="tanggal_akhir" id="tanggal_akhir" value="<?= $tgl[1] ?>" class="form-control"/>
  </div>
  <div class="form-group">
   <input type="submit" name="submit_tgl" class="btn btn-primary" value="Tampilkan"/>
-  <button type="button" name="download_pdf" class="btn btn-info">Unduh PDF</button>
+  <button type="submit" name="download_pdf" class="btn btn-info">Unduh PDF</button>
  </div>
  </form>
 	<?php echo form_open($this->uri->uri_string()); ?>
@@ -58,7 +58,7 @@ if ($can_delete) {
     <tr>
      <td><?= $rc->display_name ?></td>
      <td><?= $rc->nama ?></td>
-     <td><?= $rc->tanggal_angkut ?></td>
+     <td><?= tanggal($rc->tanggal_angkut) ?></td>
      <td><?= $rc->waktu_angkut ?></td>
     </tr>
    <?php }  ?>

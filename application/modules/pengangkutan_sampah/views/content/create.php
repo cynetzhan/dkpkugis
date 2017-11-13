@@ -62,24 +62,27 @@ $id = isset($pengangkutan_sampah->id_laporan) ? $pengangkutan_sampah->id_laporan
              ?>
              <table class="table table-bordered">
               <tr>
-               <?php foreach($tpslist as $tps){ 
-                $is_done = isset($laporan[$tps->id]);
-               ?>
-               <td>
-                <label class="form-label" for="tps<?= $tps->id ?>"><?= $tps->nama ?></label>
-                <button type="button" class="btn <?= ($is_done)?"btn-success":"btn-primary" ?> lapor" tps-id="<?= $tps->id ?>" tps-status="0" <?= (!$is_done)?:"disabled" ?> ><span class="fa fa-check"></span> <?= ($is_done)?"Selesai":"Sudah Diangkut" ?></button>
-                <div class="status"><?= ($is_done)?"Diangkut pada: <br>".$laporan[$tps->id]['tanggal_angkut'] ." ".$laporan[$tps->id]['waktu_angkut']:"" ?></div>
-               </td>
-                <?php 
-                 $curKolom++;
-                 if($curKolom == $kolom){
-                  echo "</tr>";
-                  echo "<tr>";
-                  $curKolom = 1;
-                 }
-                } 
-                 
+               <?php 
+               if(is_array($tpslist)){
+                foreach($tpslist as $tps){ 
+                 $is_done = isset($laporan[$tps->id]);
                 ?>
+                <td>
+                 <label class="form-label" for="tps<?= $tps->id ?>"><?= $tps->nama ?></label>
+                 <button type="button" class="btn <?= ($is_done)?"btn-success":"btn-primary" ?> lapor" tps-id="<?= $tps->id ?>" tps-status="0" <?= (!$is_done)?:"disabled" ?> ><span class="fa fa-check"></span> <?= ($is_done)?"Selesai":"Sudah Diangkut" ?></button>
+                 <div class="status"><?= ($is_done)?"Diangkut pada: <br>".$laporan[$tps->id]['tanggal_angkut'] ." ".$laporan[$tps->id]['waktu_angkut']:"" ?></div>
+                </td>
+                 <?php 
+                  $curKolom++;
+                  if($curKolom == $kolom){
+                   echo "</tr>";
+                   echo "<tr>";
+                   $curKolom = 1;
+                  }
+                 } 
+                } else { ?>
+                 <td> Tidak ada TPS Tersedia</td>
+                <?php } ?>
                </tr>
              </table>
             </div>

@@ -111,7 +111,12 @@ class Content extends Admin_Controller
         }
         
         //prep data laporan angkut selesai
-        $angkut_data = $this->pengangkutan_sampah_model->where('tanggal_angkut',date('Y-m-d'))->find_all();
+        $this->load->model('petugas/petugas_model');
+        $supir=$this->petugas_model->find_by('id_user',$this->auth->user()->id);
+        $crit=array(
+         'tanggal_angkut'=>date('Y-m-d'),
+        );
+        $angkut_data = $this->pengangkutan_sampah_model->find_all_by($crit);
         $tpsan = array();
         if($angkut_data !== false){
          foreach($angkut_data as $row){
@@ -123,7 +128,7 @@ class Content extends Admin_Controller
         }
 
         Template::set('toolbar_title', lang('pengangkutan_sampah_action_create'));
-        Template::set('tpslist', $this->tps_model->find_all());
+        Template::set('tpslist', $this->tps_model->find_all_by('kecamatan',$supir->kecamatan));
         Template::set('laporan',$tpsan);
         Template::set('user', $this->auth->user());
 

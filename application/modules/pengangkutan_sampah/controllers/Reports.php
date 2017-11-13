@@ -77,13 +77,29 @@ class Reports extends Admin_Controller
         $this->pagination->initialize($pager);
         $this->pengangkutan_sampah_model->limit($limit, $offset);
         
+        $tgl_awal = ($this->input->post('tanggal_awal') != null)?$this->input->post('tanggal_awal'):date('Y-m-d');
+        $tgl_akhir = ($this->input->post('tanggal_akhir') != null)?$this->input->post('tanggal_akhir'):date('Y-m-d');
+        $this->pengangkutan_sampah_model->where("tanggal_angkut between '".$tgl_awal."' and '".$tgl_akhir."'");
         $records = $this->pengangkutan_sampah_model->find_all_joined();
-
-        Template::set('records', $records);
         
-    Template::set('toolbar_title', lang('pengangkutan_sampah_manage'));
+        if($this->input->post('download_pdf') !== null){
+         $this->coba($records);
+         //echo "wah";
+        } else {
+         Template::set('records', $records);
+         Template::set('tgl', array($tgl_awal,$tgl_akhir));
+         Template::set('toolbar_title', lang('pengangkutan_sampah_manage'));
 
-        Template::render();
+         Template::render();
+        }
+    }
+    
+    public function coba($row){
+     $this->load->view('reports/coba',array('hasil'=>$row));
+     //Template::set('hasil',$row);
+     //Template::set_view
+     //Template::render('coba');
+     //echo var_dump($this->input->post());
     }
     
     /**

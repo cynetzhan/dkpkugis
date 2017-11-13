@@ -49,3 +49,8 @@ function text_preview($text, $limit){
  $join = implode('. ',$raw);
  return $join;
 }
+
+function kecamatan_list(){
+ $arr = array("Sukajadi","Pekanbaru","Sail","Lima Puluh","Bukit Raya","Payung Sekaki","Rumbai","Rumbai Pesisir","Tampan","Marpoyan Damai","Tenayan Raya","Senapelan");
+ return $arr;
+}

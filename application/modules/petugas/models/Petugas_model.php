@@ -54,11 +54,11 @@ class Petugas_model extends BF_Model
 			'label' => 'lang:petugas_field_shift_petugas',
 			'rules' => 'max_length[10]',
 		),
-		array(
+		/* array(
 			'field' => 'id_rute',
 			'label' => 'lang:petugas_field_id_rute',
 			'rules' => 'max_length[11]',
-		),
+		), */
 		array(
 			'field' => 'kecamatan',
 			'label' => 'lang:petugas_field_kecamatan',

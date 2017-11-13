@@ -45,19 +45,35 @@ $id = isset($petugas->id_petugas) ? $petugas->id_petugas : '';
                 </div>
             </div>
 
-            <div class="control-group<?php echo form_error('id_rute') ? ' error' : ''; ?>">
+            <?php /*<div class="control-group<?php echo form_error('id_rute') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('petugas_field_id_rute'), 'id_rute', array('class' => 'control-label')); ?>
                 <div class='controls'>
                     <input id='id_rute' type='text' name='id_rute' maxlength='11' value="<?php echo set_value('id_rute', isset($petugas->id_rute) ? $petugas->id_rute : ''); ?>" />
                     <span class='help-inline'><?php echo form_error('id_rute'); ?></span>
                 </div>
-            </div>
+            </div> */ ?>
 
             <div class="control-group<?php echo form_error('kecamatan') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('petugas_field_kecamatan'), 'kecamatan', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <input id='kecamatan' type='text' name='kecamatan' maxlength='30' value="<?php echo set_value('kecamatan', isset($petugas->kecamatan) ? $petugas->kecamatan : ''); ?>" />
+                    <select name="kecamatan">
+                    <?php foreach(kecamatan_list() as $kc){ ?>
+                    <option value="<?= $kc ?>" <?php echo set_value('kecamatan', isset($petugas->kecamatan) ? 'selected' : ''); ?>><?= $kc ?></option>
+                    <?php } ?>
+                    </select>
                     <span class='help-inline'><?php echo form_error('kecamatan'); ?></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo form_label("Pengguna Terkait", 'id_user', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <select name="id_user">
+                    <option disabled selected>Pilih salah satu</option>
+                     <?php foreach($userlist as $usr){ ?>
+                     <option value="<?= $usr->id ?>"><?= $usr->username." (".$usr->display_name.")" ?></option>
+                     <?php } ?>
+                    </select>
+                    
                 </div>
             </div>
         </fieldset>

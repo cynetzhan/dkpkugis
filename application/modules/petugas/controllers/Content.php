@@ -65,8 +65,10 @@ class Content extends Admin_Controller
         
         
         $records = $this->petugas_model->find_all();
+        
 
         Template::set('records', $records);
+        
         
     Template::set('toolbar_title', lang('petugas_manage'));
 
@@ -95,7 +97,8 @@ class Content extends Admin_Controller
                 Template::set_message(lang('petugas_create_failure') . $this->petugas_model->error, 'error');
             }
         }
-
+        $user = $this->user_model->find_all_by('bf_users.role_id','7');
+        Template::set('userlist', $user);
         Template::set('toolbar_title', lang('petugas_action_create'));
 
         Template::render();
@@ -141,7 +144,8 @@ class Content extends Admin_Controller
 
             Template::set_message(lang('petugas_delete_failure') . $this->petugas_model->error, 'error');
         }
-        
+        $user = $this->user_model->find_all_by('bf_users.role_id','7');
+        Template::set('userlist', $user);
         Template::set('petugas', $this->petugas_model->find($id));
 
         Template::set('toolbar_title', lang('petugas_edit_heading'));

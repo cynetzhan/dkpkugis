@@ -24,7 +24,6 @@ if ($can_delete) {
 					<th><?php echo lang('petugas_field_nama_petugas'); ?></th>
 					<th><?php echo lang('petugas_field_no_hp_petugas'); ?></th>
 					<th><?php echo lang('petugas_field_shift_petugas'); ?></th>
-					<th><?php echo lang('petugas_field_id_rute'); ?></th>
 					<th><?php echo lang('petugas_field_kecamatan'); ?></th>
 				</tr>
 			</thead>
@@ -57,7 +56,6 @@ if ($can_delete) {
 				<?php endif; ?>
 					<td><?php e($record->no_hp_petugas); ?></td>
 					<td><?php e($record->shift_petugas); ?></td>
-					<td><?php e($record->id_rute); ?></td>
 					<td><?php e($record->kecamatan); ?></td>
 				</tr>
 				<?php

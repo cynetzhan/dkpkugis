@@ -112,16 +112,11 @@ var googleMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
     subdomains: ['mt0','mt1','mt2','mt3'],
     attribution: "Provided by Google Maps"
 });
-	var usgsImagery = L.layerGroup([L.tileLayer("http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", {
-				maxZoom: 15,
-			}), L.tileLayer.wms("http://raster.nationalmap.gov/arcgis/services/Orthoimagery/USGS_EROS_Ortho_SCALE/ImageServer/WMSServer?", {
-				minZoom: 16,
-				maxZoom: 19,
-				layers: "0",
-				format: 'image/jpeg',
-				transparent: true,
-				attribution: "Aerial Imagery courtesy USGS"
-			})]);
+	var osm = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    		maxZoom: 20,
+    		subdomains: ['a','b','c'],
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>"'
+    	});
 
 /* Overlay Layers */
 var highlight = L.geoJson(null);
@@ -329,7 +324,7 @@ $.getJSON("../tps/geojson", function (data) {
 map = L.map("map", {
 		zoom: 10,
 		center: [0.54, 101.5],
-		layers: [cartoLight, pekanbaru, ruteLines, markerClusters, highlight],
+		layers: [osm, pekanbaru, ruteLines, markerClusters, highlight],
 		zoomControl: false,
 		attributionControl: false
 	});
@@ -429,7 +424,7 @@ if (document.body.clientWidth <= 767) {
 }
 
 var baseLayers = {
-	"OpenStreetMap": cartoLight,
+	"OpenStreetMap": osm,
 	"Google Maps": googleMap
 };
 

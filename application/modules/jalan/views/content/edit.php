@@ -189,8 +189,13 @@ echo Assets::js(
     		subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     		attribution: "Provided by <a href='http://maps.google.com'>Google Maps</a>"
     	});
+     var osm = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    		maxZoom: 20,
+    		subdomains: ['a','b','c'],
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>"'
+    	});
 			map = new L.Map('map', {
-				layers: [cartoLight, pekanbaru]
+				layers: [osm, pekanbaru]
 				, center: new L.LatLng(0.51861, 101.44728)
 				, zoom: 18});
 
@@ -220,7 +225,7 @@ echo Assets::js(
   
   L.control.layers(
     {
-     'OpenStreetMap': cartoLight,
+     'OpenStreetMap': osm,
      'Google Maps': googleMap
     }, {
     	'Layer Titik Rute': drawnItems

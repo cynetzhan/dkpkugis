@@ -196,7 +196,7 @@ class Content extends Admin_Controller
         $data = array();
         $config['upload_path']   = 'data/images/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size']      = 2048;
+        $config['max_size']      = 5120;
         $config['file_name']     = "TPS-".$id;
         $this->load->library('upload', $config);
 
@@ -211,9 +211,10 @@ class Content extends Admin_Controller
           }
         } else {
           $data['file_foto'] = $this->upload->data('file_name');
+          $this->tps_model->update($id,$data);
         }
         
-        $this->tps_model->update($id,$data);
+        
 
         return $return;
     }

@@ -223,10 +223,15 @@ echo Assets::js( array('leaflet-src.js'
     		subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     		attribution: "Provided by <a href='http://maps.google.com'>Google Maps</a>"
     	});
+     var osm = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    		maxZoom: 20,
+    		subdomains: ['a','b','c'],
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>"'
+    	});
       var map = L.map("map", {
       		
       		center: [$("input#lat").val(), $("input#long").val()],
-      		layers: [cartoLight, pekanbaru, highlight],
+      		layers: [osm, pekanbaru, highlight],
       		zoomControl: true,
       		attributionControl: true,
         zoom: $("input#zoom").val(),
@@ -237,7 +242,7 @@ echo Assets::js( array('leaflet-src.js'
       drawnItems = L.featureGroup().addTo(map);
     
     L.control.layers({
-     'OpenStreetMap': cartoLight,
+     'OpenStreetMap': osm,
      'Google Maps': googleMap
     }, {
     	'Layer Titik Gambar': highlight

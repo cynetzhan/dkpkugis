@@ -64,6 +64,7 @@ class Home extends MX_Controller
 	{
 		$this->load->library('users/auth');
 		$this->set_current_user();
+  Assets::js(array('jquery.min.js','bootstrap.min.js'));
   Template::set('hal','home');
 		Template::render();
 	}//end index()
@@ -71,6 +72,36 @@ class Home extends MX_Controller
  public function gis(){
   $this->load->library('users/auth');
   $this->set_current_user();
+  Assets::add_css(array('leaflet.css','MarkerCluster.css','MarkerCluster.Default','L.Control.Locate.css','leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css','app.css','leaflet.draw.css'));
+  Assets::js(array('jquery.min.js','bootstrap.min.js','typeahead.bundle.min.js','handlebars.min.js','list.min.js','leaflet.js','leaflet.markercluster.js','L.Control.Locate.min.js','leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js','MovingMarker.js','Leaflet.draw.js',
+  'leaflet.geometryutil.js','leaflet-pip.js'
+		, 'Leaflet.Draw.Event.js'
+		, 'Toolbar.js'
+		, 'Tooltip.js'
+		, 'ext/GeometryUtil.js'
+		, 'ext/LatLngUtil.js'
+		, 'ext/LineUtil.Intersect.js'
+		, 'ext/Polygon.Intersect.js'
+		, 'ext/Polyline.Intersect.js'
+		, 'ext/TouchEvents.js'
+		, 'draw/DrawToolbar.js'
+		, 'draw/handler/Draw.Feature.js'
+		, 'draw/handler/Draw.SimpleShape.js'
+		, 'draw/handler/Draw.Polyline.js'
+		, 'draw/handler/Draw.Circle.js'
+		, 'draw/handler/Draw.Marker.js'
+		, 'draw/handler/Draw.Polygon.js'
+		, 'draw/handler/Draw.Rectangle.js'
+		, 'edit/EditToolbar.js'
+		, 'edit/handler/EditToolbar.Edit.js'
+		, 'edit/handler/EditToolbar.Delete.js'
+		, 'Control.Draw.js'
+		, 'edit/handler/Edit.Poly.js'
+		, 'edit/handler/Edit.SimpleShape.js'
+		, 'edit/handler/Edit.Circle.js'
+		, 'edit/handler/Edit.Rectangle.js'
+		, 'edit/handler/Edit.Marker.js'
+  , 'app.js'));
   Template::set('hal','GIS');
   Template::render();
  }

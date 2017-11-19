@@ -63,6 +63,14 @@ function animateSidebar() {
 	});
 }
 
+function geoBalik(data){
+    var out=[];
+    for(i=0;i<data.length;i++){
+        out.push([data[i][1],data[i][0]]);
+    }
+    return out;
+}
+
 function sizeLayerControl() {
 	$(".leaflet-control-layers").css("max-height", $("#map").height() - 50);
 }
@@ -100,6 +108,11 @@ function syncSidebar() {
 	featureList.sort("feature-name", {
 		order: "asc"
 	});
+}
+
+function animateMarker(geom){
+    marker1anim = L.Marker.movingMarker(geom, 60000).addTo(map);
+    marker1anim.start();
 }
 
 /* Basemap Layers */
@@ -187,7 +200,7 @@ var pekanbaru = L.geoJson(null, {
 						$("#span_id_kel").html(feature.properties.Kelurahan)
 						//tampilkan
 						$("#featureModal").modal("show");
-
+                        
 					}
 				});
 			}
@@ -196,12 +209,14 @@ var pekanbaru = L.geoJson(null, {
 	});
 $.getJSON("../data/kelurahan.php", function (data) {
 	pekanbaru.addData(data);
+    
 });
 
 var ruteColors = {
 	"Dump Truck": "#ff3135",
 	"L-300": "#00ff00"
 };
+var marker1 = L.Marker.movingMarker([[0,0],[0,0]], 1000);
 
 var ruteLines = L.geoJson(null, {
 		style: function (feature) {
@@ -230,8 +245,16 @@ var ruteLines = L.geoJson(null, {
 						//timpa keterangan dengan content kita
 						$("#feature-info").html(content);
 						//tampilkan
-						$("#featureModal").modal("show");
-
+                        marker1.moveTo(geoBalik(feature.geometry.coordinates[0])[0],0);
+                        marker1.addTo(map);
+                        geoBalik(feature.geometry.coordinates[0]).forEach(function(ltln) {
+                            //console.log(ltln);
+                            marker1.addLatLng(ltln, 5000);
+                        });
+                        marker1.bindPopup("<strong>Jalan "+feature.properties.Nama_Ruas+"</strong><br>Dari Pukul 08.00 sampai 09.00", {autoPan:false}).openPopup();
+                        marker1.start();
+						//$("#featureModal").modal("show");
+                        //animateMarker(feature.geometry.coordinates[0]);
 					}
 				});
 			}
@@ -291,6 +314,7 @@ tps = L.geoJson(null, {
 					 + "<tr><th>Volume</th><td>" + feature.properties.volume + "</td></tr>"
                      + "<tr><td colspan='2'>Foto TPS<br> <img class='img-responsive' src='../data/images/" + feature.properties.foto + "' alt='Foto TPS tidak tersedia' /></td></tr>"
 					 + "<table>";
+                
 				layer.on({
 					click: function (e) {
 						$("#feature-title").html(feature.properties.nama);
@@ -303,7 +327,8 @@ tps = L.geoJson(null, {
 						$("#span_id_kel").html(feature.properties.kelurahan)
 						$("#featureModal").modal("show");
 						highlight.clearLayers().addLayer(L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], highlightStyle));
-					}
+					},
+                    
 				});
 				$("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="../assets/images/bin.png"></td><td class="feature-name">' + layer.feature.properties.nama + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
 				tpsSearch.push({
@@ -324,7 +349,7 @@ $.getJSON("../tps/geojson", function (data) {
 map = L.map("map", {
 		zoom: 10,
 		center: [0.54, 101.5],
-		layers: [osm, pekanbaru, ruteLines, markerClusters, highlight],
+		layers: [osm, ruteLines, markerClusters, highlight],
 		zoomControl: false,
 		attributionControl: false
 	});
@@ -379,7 +404,54 @@ attributionControl.onAdd = function (map) {
 	return div;
 };
 map.addControl(attributionControl);
+drawnItems = L.featureGroup([pekanbaru]).addTo(map);
+map.addControl(new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems,
+        polygon: false,
+        feature: false,
+        simpleshape: false,
+        rectangle: false,
+        circle: false,
+        polyline: false,
+        edit: false
+    },
+    draw: {
+        polygon: false,
+        feature: false,
+        simpleshape: false,
+        rectangle: false,
+        circle: false,
+        polyline: false
+    }    
+}));
 
+map.on(L.Draw.Event.CREATED, function(e,f) {
+    var layer = e.layer;
+    clickedLayer = L.GeometryUtil.closestLayer(map, [pekanbaru], layer.toGeoJSON().geometry.coordinates)
+    //apala = leafletPip.pointInLayer(layer.toGeoJSON().geometry.coordinates, pekanbaru);
+    //console.log(apala.toGeoJSON());
+    console.log(clickedLayer.layer.toGeoJSON());
+    console.log(layer.toGeoJSON());
+    haha = '';
+    $.getJSON("../data/kelurahan.php", function(d){
+        haha = d;
+        wuwu = L.geoJson(haha, {
+            filter: function(feature) {
+              //return feature.geometry.coordinates == clickedLayer.layer.toGeoJSON().geometry.coordinates  
+              return feature.properties.Kecamatan == 'Sukajadi'
+            },
+            onEachFeature: function(feature,layer) {
+                console.log(feature.geometry);
+                }
+        });
+    })
+    
+    
+    //console.log(wuwu);
+    drawnItems.addLayer(layer);
+});
+        
 var zoomControl = L.control.zoom({
 		position: "bottomright"
 	}).addTo(map);

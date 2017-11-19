@@ -17,16 +17,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/bootflat.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/font-awesome.min.css') ?>">
 	
-    <?php if(isset($hal)){ 
-           if($hal =='GIS') { ?>
-    <!--CSS untuk leaflet kita -->
-    <link rel="stylesheet" href="<?= base_url('assets/css/leaflet.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/MarkerCluster.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/MarkerCluster.Default.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/L.Control.Locate.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
-    <?php } } ?>
+    <?php echo Assets::css(); ?>    
     <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/images/favicon-76.png') ?>">
     <link rel="apple-touch-icon" sizes="120x120" href="<?= base_url('assets/images/favicon-120.png') ?>">
     <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('assets/images/favicon-152.png') ?>">

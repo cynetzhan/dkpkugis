@@ -15,7 +15,7 @@
 	{ "type": "Feature", "properties": { 
 		"Nama_Ruas": "<?php echo $records[$i]->nama;?>"
 		,"armada": "<?php echo $records[$i]->armada;?>"
-		, "No_Ruas": "10.A.002", "Fungsi": "Arteri", "Kecamatan": "Kec. Pekanbaru", "Nama_Pangk": null, "Nama_Ujung": null, "Lebar_jala": null, "Panjang": 0.235 }
+		, "No_Ruas": "10.A.002", "Fungsi": "Arteri", "JadwalMulai":"<?= $records[$i]->jadwal_mulai?:'00:00' ?>", "JadwalSelesai":"<?= $records[$i]->jadwal_selesai?:'00:00' ?>","Kecamatan": "Kec. Pekanbaru", "Nama_Pangk": null, "Nama_Ujung": null, "Lebar_jala": null, "Panjang": 0.235 }
 		, "geometry": { "type": "MultiLineString", "coordinates": [ <?php echo $records[$i]->geom;?> ] } }
 <?php 
 		if($i<count($records)-1) echo ',';

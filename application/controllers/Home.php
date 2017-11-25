@@ -73,35 +73,8 @@ class Home extends MX_Controller
   $this->load->library('users/auth');
   $this->set_current_user();
   Assets::add_css(array('leaflet.css','MarkerCluster.css','MarkerCluster.Default','L.Control.Locate.css','leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css','app.css','leaflet.draw.css'));
-  Assets::js(array('jquery.min.js','bootstrap.min.js','typeahead.bundle.min.js','handlebars.min.js','list.min.js','leaflet.js','leaflet.markercluster.js','L.Control.Locate.min.js','leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js','MovingMarker.js','Leaflet.draw.js',
-  'leaflet.geometryutil.js','leaflet-pip.js'
-		, 'Leaflet.Draw.Event.js'
-		, 'Toolbar.js'
-		, 'Tooltip.js'
-		, 'ext/GeometryUtil.js'
-		, 'ext/LatLngUtil.js'
-		, 'ext/LineUtil.Intersect.js'
-		, 'ext/Polygon.Intersect.js'
-		, 'ext/Polyline.Intersect.js'
-		, 'ext/TouchEvents.js'
-		, 'draw/DrawToolbar.js'
-		, 'draw/handler/Draw.Feature.js'
-		, 'draw/handler/Draw.SimpleShape.js'
-		, 'draw/handler/Draw.Polyline.js'
-		, 'draw/handler/Draw.Circle.js'
-		, 'draw/handler/Draw.Marker.js'
-		, 'draw/handler/Draw.Polygon.js'
-		, 'draw/handler/Draw.Rectangle.js'
-		, 'edit/EditToolbar.js'
-		, 'edit/handler/EditToolbar.Edit.js'
-		, 'edit/handler/EditToolbar.Delete.js'
-		, 'Control.Draw.js'
-		, 'edit/handler/Edit.Poly.js'
-		, 'edit/handler/Edit.SimpleShape.js'
-		, 'edit/handler/Edit.Circle.js'
-		, 'edit/handler/Edit.Rectangle.js'
-		, 'edit/handler/Edit.Marker.js'
-  , 'app.js'));
+  Assets::js(array('jquery.min.js','bootstrap.min.js','typeahead.bundle.min.js','handlebars.min.js','list.min.js','leaflet.js','leaflet.markercluster.js','L.Control.Locate.min.js','leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js','MovingMarker.js',
+  'leaflet.geometryutil.js', 'app.js'));
   Template::set('hal','GIS');
   Template::render();
  }
@@ -109,12 +82,29 @@ class Home extends MX_Controller
  public function profil($id){
   $this->load->library('users/auth');
   $this->set_current_user();
-  
+  Assets::js(array('jquery.min.js','bootstrap.min.js'));
   $profil=$this->profil_model->find($id);
-  $prolist=$this->profil_model->find_all();
+  $prolist=$this->profil_model->find_all_by('kategori_informasi','Profil DKP');
   //echo var_dump($profil);
   Template::set('profil',$profil);
   Template::set('prolist',$prolist);
+  Template::render();
+ }
+ 
+ public function informasi(){
+  $this->load->library('users/auth');
+  $this->set_current_user();
+  if($this->input->post('cari') !== null){
+   $this->profil_model->where('kategori_informasi','Informasi Publik');
+   $this->profil_model->like('judul_informasi',$this->input->post('query'));
+   $prolist=$this->profil_model->find_all();
+  } else {
+   $prolist=$this->profil_model->find_all_by('kategori_informasi','Informasi Publik');
+  }
+  Assets::js(array('jquery.min.js','bootstrap.min.js'));
+  
+  //echo var_dump($prolist);
+  Template::set('artikel',$prolist);
   Template::render();
  }
  
@@ -123,19 +113,22 @@ class Home extends MX_Controller
   $data = $this->laporan_masyarakat_model->prep_data($this->input->post());
   $config['upload_path']   = 'data/images/';
   $config['allowed_types'] = 'gif|jpg|png|jpeg';
-  $config['max_size']      = 2048;
+  $config['max_size']      = 10240;
   $config['file_name']     = $data['nama_pe_laporanmas']."-".date('ymdhis');
   $this->load->library('upload', $config);
-
-  if ( ! $this->upload->do_upload('foto_laporanmas') && ! $this->upload->data('is_image') ){
-    $error = array('error' => $this->upload->display_errors());
-    if($error['error'] == "You did not select a file to upload."){
-     $this->flashMsg($this->upload->display_errors(),"","");
-     //echo $this->upload->display_errors();
-    }
-    $data['foto_laporanmas'] = '';
+  if($this->upload->data() != null){
+   if ( ! $this->upload->do_upload('foto_laporanmas') && ! $this->upload->data('is_image') ){
+     $error = array('error' => $this->upload->display_errors());
+     if($error['error'] == "You did not select a file to upload."){
+      $this->flashMsg($this->upload->display_errors(),"","");
+      //echo $this->upload->display_errors();
+     }
+     
+   } else {
+     $data['foto_laporanmas'] = $this->upload->data('file_name');
+   }
   } else {
-    $data['foto_laporanmas'] = $this->upload->data('file_name');
+   $data['foto_laporanmas'] = '';
   }
   $data['tgl_laporanmas'] = date('Y-m-d h:i:s');
   $data['status_laporan'] = 0;
@@ -148,12 +141,20 @@ class Home extends MX_Controller
    Template::set('judul','Laporan Telah Diterima!');
   } else {
    Template::set('success',false);
-   Template::set('judul','Gagal Mengirim Laporan!');
+   Template::set('judul','Gagal Mengirim Laporan! '.$this->laporan_masyarakat_model->error);
   }
   //echo var_dump($data);
   
   Template::set_view('home/message');
   Template::render();
+ }
+ 
+ public function apicamat(){
+  $k_lat = $this->input->get('lat');
+  $k_long = $this->input->get('long');
+  $jsonlurah = file_get_contents('data/kelurahan.php');
+  
+  
  }
 
 	//--------------------------------------------------------------------

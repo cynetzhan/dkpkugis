@@ -179,15 +179,17 @@ class Content extends Admin_Controller
 
         // Additional handling for default values should be added below,
         // or in the model's prep_data() method
-        $data['file_foto']='';
+        
         $return = false;
         if ($type == 'insert') {
+            $data['file_foto']='';
             $id = $this->tps_model->insert($data);
 
             if (is_numeric($id)) {
                 $return = $id;
             }
         } elseif ($type == 'update') {
+            $old_data = $this->tps_model->find($id);
             $return = $this->tps_model->update($id, $data);
         }
         if($type == 'insert'){
@@ -196,24 +198,28 @@ class Content extends Admin_Controller
         $data = array();
         $config['upload_path']   = 'data/images/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size']      = 5120;
+        $config['max_size']      = 10240;
         $config['file_name']     = "TPS-".$id;
         $this->load->library('upload', $config);
-
-        if ( ! $this->upload->do_upload('images') && ! $this->upload->data('is_image') ){
-          $error = array('error' => $this->upload->display_errors());
-          if($error['error'] == "You did not select a file to upload."){
-           $this->flashMsg($this->upload->display_errors(),"","");
-           //echo $this->upload->display_errors();
-          }
-          if($type != 'update'){
-           $data['file_foto'] = '';
-          }
-        } else {
-          $data['file_foto'] = $this->upload->data('file_name');
-          $this->tps_model->update($id,$data);
-        }
-        
+        if($this->upload->data() !== null) {
+         if ( ! $this->upload->do_upload('images') && ! $this->upload->data('is_image') ){
+           $error = array('error' => $this->upload->display_errors());
+           if($error['error'] == "You did not select a file to upload."){
+            $this->flashMsg($this->upload->display_errors(),"","");
+            //echo $this->upload->display_errors();
+           }
+           if($type != 'update'){
+            $data['file_foto'] = '';
+           }
+         } else {
+           $data['file_foto'] = $this->upload->data('file_name');
+           if($type == 'update'){
+            unlink($config['upload_path'].$old_data->file_foto);
+           }
+           $return = $this->tps_model->update($id,$data);
+         }
+        } 
+        //$return = $this->tps_model->update($id,$data);
         
 
         return $return;

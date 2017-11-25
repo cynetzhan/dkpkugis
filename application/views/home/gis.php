@@ -3,7 +3,7 @@
         <div class="sidebar-wrapper">
           <div class="panel panel-default" id="features">
             <div class="panel-heading">
-              <h3 class="panel-title">Points of Interest
+              <h3 class="panel-title">Daftar TPS Terdekat
               <button type="button" class="btn btn-xs btn-default pull-right" id="sidebar-hide-btn"><i class="fa fa-chevron-left"></i></button></h3>
             </div>
             <div class="panel-body">
@@ -56,7 +56,7 @@
               <li class="active">
                <a href="#feature-info" data-toggle="tab"><i class="fa fa-question-circle"></i>&nbsp;Informasi Tempat</a>
               </li>
-              <li>
+              <li id="tab_aduan" style="display:none">
                <a href="#form-aduan" data-toggle="tab"><i class="fa fa-envelope"></i>&nbsp;Form Pengaduan</a>
               </li>
             </ul>
@@ -124,22 +124,6 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">
-              Developed by <a href='http://bryanmcbride.com'>bryanmcbride.com</a>
-            </h4>
-          </div>
-          <div class="modal-body">
-            <div id="attribution"></div>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

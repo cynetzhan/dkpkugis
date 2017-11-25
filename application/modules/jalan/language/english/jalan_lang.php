@@ -48,7 +48,7 @@ $lang['jalan_column_created_by'] = 'Created By';
 $lang['jalan_column_modified_by'] = 'Modified By';
 
 // Module Details
-$lang['jalan_module_name'] = 'jalan';
+$lang['jalan_module_name'] = 'Rute';
 $lang['jalan_module_description'] = 'Your module description';
 $lang['jalan_area_title'] = 'Rute';
 

@@ -42,9 +42,9 @@
              <ul class="dropdown-menu">
               <?php
               $this->load->model('profil/profil_model');
-              $profil = $this->profil_model->find_all();
+              $profil = $this->profil_model->find_all_by('kategori_informasi','Profil DKP');
               foreach($profil as $atk){ ?>
-              <li><a href="<?= base_url('home/profil/'.$atk->id_profil) ?>"><?= $atk->judul_profil ?></a></li>
+              <li><a href="<?= base_url('home/profil/'.$atk->id_informasi) ?>"><?= $atk->judul_informasi ?></a></li>
               <?php } ?>
              </ul>
             </li>

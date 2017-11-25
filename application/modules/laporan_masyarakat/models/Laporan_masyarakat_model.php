@@ -72,12 +72,12 @@ class Laporan_masyarakat_model extends BF_Model
 		array(
 			'field' => 'foto_laporanmas',
 			'label' => 'lang:laporan_masyarakat_field_foto_laporanmas',
-			'rules' => 'max_length[15]',
+			'rules' => 'max_length[100]',
 		),
 		array(
 			'field' => 'id_tps',
 			'label' => 'lang:laporan_masyarakat_field_id_tps',
-			'rules' => 'required|max_length[5]',
+			'rules' => 'required|max_length[40]',
 		),
 	);
 	protected $insert_validation_rules  = array();

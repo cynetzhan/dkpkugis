@@ -168,7 +168,7 @@ class Content extends Admin_Controller
     private function save_profil($type = 'insert', $id = 0)
     {
         if ($type == 'update') {
-            $_POST['id_profil'] = $id;
+            $_POST['id_informasi'] = $id;
         }
 
         // Validate the data
@@ -184,7 +184,7 @@ class Content extends Admin_Controller
         // Additional handling for default values should be added below,
         // or in the model's prep_data() method
         
-		$data['tgl_terbit_profil']	= $this->input->post('tgl_terbit_profil') ? $this->input->post('tgl_terbit_profil') : '0000-00-00 00:00:00';
+        $data['tgl_terbit_informasi']	= $this->input->post('tgl_terbit_informasi') ? $this->input->post('tgl_terbit_informasi') : '0000-00-00 00:00:00';
 
         $return = false;
         if ($type == 'insert') {
@@ -194,7 +194,36 @@ class Content extends Admin_Controller
                 $return = $id;
             }
         } elseif ($type == 'update') {
+            $old_data = $this->profil_model->find($id);
             $return = $this->profil_model->update($id, $data);
+        }
+        if($type == 'insert'){
+         $id=$this->db->insert_id();
+        }
+        $data = array();
+        $config['upload_path']   = 'data/images/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = 10240;
+        $config['file_name']     = "Info-".$id;
+        $this->load->library('upload', $config);
+
+        if($this->upload->data() !== null) {
+         if ( ! $this->upload->do_upload('images') && ! $this->upload->data('is_image') ){
+           $error = array('error' => $this->upload->display_errors());
+           if($error['error'] == "You did not select a file to upload."){
+            $this->flashMsg($this->upload->display_errors(),"","");
+            //echo $this->upload->display_errors();
+           }
+           if($type != 'update'){
+            $data['foto_informasi'] = '';
+           }
+         } else {
+           $data['foto_informasi'] = $this->upload->data('file_name');
+           if($type == 'update'){
+            unlink($config['upload_path'].$old_data->foto_informasi);
+           }
+           $return = $this->profil_model->update($id,$data);
+         }
         }
 
         return $return;

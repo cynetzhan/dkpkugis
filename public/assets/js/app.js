@@ -55,6 +55,8 @@ $("#sidebar-hide-btn").click(function () {
 	return false;
 });
 
+
+
 function animateSidebar() {
 	$("#sidebar").animate({
 		width: "toggle"
@@ -188,6 +190,10 @@ var pekanbaru = L.geoJson(null, {
 					 + "<table>";
 				layer.on({
 					click: function (e) {
+                        if(!map.kepo.enabled()){
+                            $("li#tab_aduan").css('display','none');
+                            $(".nav-tabs a[href='#feature-info']").tab('show');
+                        }
 						//untuk sementara, judulnya digunakan Kelurahan saja, sesuaikan dengan JSON
 						$("#feature-title").html(feature.properties.Kelurahan);
 						//timpa keterangan dengan content kita
@@ -240,6 +246,10 @@ var ruteLines = L.geoJson(null, {
 					 + "<table>";
 				layer.on({
 					click: function (e) {
+                        $("li#tab_aduan").css('display','none');
+                        if(map.kepo.enabled()){
+                            $(".nav-tabs a[href='#feature-info']").tab('show');
+                        }
 						//untuk sementara, judulnya digunakan Nama_Ruas saja, sesuaikan dengan JSON
 						$("#feature-title").html(feature.properties.Nama_Ruas);
 						//timpa keterangan dengan content kita
@@ -251,8 +261,11 @@ var ruteLines = L.geoJson(null, {
                             //console.log(ltln);
                             marker1.addLatLng(ltln, 5000);
                         });
-                        marker1.bindPopup("<strong>Jalan "+feature.properties.Nama_Ruas+"</strong><br>Dari Pukul 08.00 sampai 09.00", {autoPan:false}).openPopup();
+                        marker1.bindPopup("<strong>Jalan "+feature.properties.Nama_Ruas+"<br>Armada: "+feature.properties.armada+"</strong><br>Dari Pukul "+feature.properties.JadwalMulai+" sampai "+feature.properties.JadwalSelesai+"<br><a href='#' id='buka_fiturmod'>Lihat Info</a>", {autoPan:false}).openPopup();
                         marker1.start();
+                        $("a#buka_fiturmod").click(function() {
+                            $("#featureModal").modal('show');
+                        });
 						//$("#featureModal").modal("show");
                         //animateMarker(feature.geometry.coordinates[0]);
 					}
@@ -317,6 +330,7 @@ tps = L.geoJson(null, {
                 
 				layer.on({
 					click: function (e) {
+                        $("li#tab_aduan").css('display','table-cell');
 						$("#feature-title").html(feature.properties.nama);
 						$("#feature-info").html(content);
 						$("input#form_id_tps").val(feature.properties.id);
@@ -349,11 +363,30 @@ $.getJSON("../tps/geojson", function (data) {
 map = L.map("map", {
 		zoom: 10,
 		center: [0.54, 101.5],
-		layers: [osm, ruteLines, markerClusters, highlight],
+		layers: [osm, pekanbaru, ruteLines, markerClusters, highlight],
 		zoomControl: false,
 		attributionControl: false
 	});
-
+markKepo = L.marker([0,0]).bindTooltip("Pilih lokasi masalah persampahan").openTooltip();
+L.handleMarkKepo = L.Handler.extend({
+    addHooks: function() {
+        map.on("mousemove", function (ev) {
+            lat = ev.latlng.lat;
+            lng = ev.latlng.lng;
+            markKepo.setLatLng([lat,lng]);
+        });
+        
+        markKepo.addTo(map);
+        $("li#tab_aduan").css('display','table-cell');
+        $(".nav-tabs a[href='#form-aduan']").tab('show');
+    },
+    removeHooks: function() {
+        map.removeLayer(markKepo);
+        $("li#tab_aduan").css('display','none');
+        $(".nav-tabs a[href='#feature-info']").tab('show');
+    }
+})
+map.addHandler('kepo',L.handleMarkKepo);
 /* Layer control listeners that allow for a single markerClusters layer */
 map.on("overlayadd", function (e) {
 	if (e.layer === tpsLayer) {
@@ -382,7 +415,41 @@ map.on("click", function (e) {
 map.on("mousemove", function (ev) {
 	lat = ev.latlng.lat;
 	lng = ev.latlng.lng;
+    //markKepo.setLatLng([lat,lng]);
 });
+L.Control.PointMark = L.Control.extend({
+    onAdd: function(map) {
+        var divh1 = L.DomUtil.create('div','leaflet-draw leaflet-control'),
+        divh2 = L.DomUtil.create('div','leaflet-draw-section',divh1)
+        divh3 = L.DomUtil.create('div','lapor-control',divh2),
+        anchor = L.DomUtil.create('a','leaflet-draw-draw-marker',divh3),
+        anchor.href = '#';
+        anchor.title = 'Pilih sebuah tempat untuk melaporkan';
+        anchor.innerHTML = "<span class='fa fa-map-marker'></span> Laporkan Masalah Persampahan"
+        anchor.style = "background-color:#fff;padding:10px;box-shadow: 0 1px 5px rgba(0,0,0,0.4);"
+        L.DomEvent.addListener(anchor, 'click' , this._markerAktif, this);
+        return divh1;
+    },
+    onRemove: function(map){
+        //nothing
+    },
+    _markerAktif: function(){
+        //var markKepo = L.marker([lat,lng]);
+        //markKepo.setLatLng([lat,lng]);
+        //markKepo.addTo(map)
+        if(map.kepo.enabled()){
+            map.kepo.disable();
+            $("a.leaflet-draw-draw-marker").css("background-color","#fff")
+        } else {
+            map.kepo.enable();
+            $("a.leaflet-draw-draw-marker").css("background-color","#ddd")
+        }
+    }
+});
+L.control.pointmark = function(opts){
+    return new L.Control.PointMark(opts);
+}
+L.control.pointmark({position: 'topleft' }).addTo(map);
 
 /* Attribution control */
 function updateAttribution(e) {
@@ -404,7 +471,7 @@ attributionControl.onAdd = function (map) {
 	return div;
 };
 map.addControl(attributionControl);
-drawnItems = L.featureGroup([pekanbaru]).addTo(map);
+/* drawnItems = L.featureGroup([pekanbaru]).addTo(map);
 map.addControl(new L.Control.Draw({
     edit: {
         featureGroup: drawnItems,
@@ -424,9 +491,9 @@ map.addControl(new L.Control.Draw({
         circle: false,
         polyline: false
     }    
-}));
+})); */
 
-map.on(L.Draw.Event.CREATED, function(e,f) {
+/* map.on(L.Draw.Event.CREATED, function(e,f) {
     var layer = e.layer;
     clickedLayer = L.GeometryUtil.closestLayer(map, [pekanbaru], layer.toGeoJSON().geometry.coordinates)
     //apala = leafletPip.pointInLayer(layer.toGeoJSON().geometry.coordinates, pekanbaru);
@@ -450,7 +517,7 @@ map.on(L.Draw.Event.CREATED, function(e,f) {
     
     //console.log(wuwu);
     drawnItems.addLayer(layer);
-});
+}); */
         
 var zoomControl = L.control.zoom({
 		position: "bottomright"
@@ -637,10 +704,10 @@ $(document).one("ajaxStop", function () {
 
 // Leaflet patch to make layer control scrollable on touch browsers
 var container = $(".leaflet-control-layers")[0];
-if (!L.Browser.touch) {
+/* if (!L.Browser.touch) {
 	L.DomEvent
 	.disableClickPropagation(container)
 	.disableScrollPropagation(container);
 } else {
 	L.DomEvent.disableClickPropagation(container);
-}
+} */

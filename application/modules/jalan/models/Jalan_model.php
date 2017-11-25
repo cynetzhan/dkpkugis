@@ -42,7 +42,7 @@ class Jalan_model extends BF_Model
 		array(
 			'field' => 'nama',
 			'label' => 'lang:jalan_field_nama',
-			'rules' => 'max_length[50]',
+			'rules' => 'max_length[100]',
 		),
 		array(
 			'field' => 'geom',

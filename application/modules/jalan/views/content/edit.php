@@ -19,10 +19,10 @@ $id = isset($jalan->id) ? $jalan->id : '';
 
 
 
-echo Assets::css('leaflet.css');
+echo Assets::css('leaflet-0.7.css');
 echo Assets::css('leaflet.draw.css');
 echo Assets::js( 
-	array('leaflet-src.js'
+	array('leaflet-0.7.js'
 		, 'Leaflet.draw.js'
 		, 'Leaflet.Draw.Event.js'
 		, 'Toolbar.js'
@@ -69,7 +69,7 @@ echo Assets::js(
             <div class="control-group<?php echo form_error('nama') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('jalan_field_nama'), 'nama', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <input id='nama' type='text' name='nama' maxlength='50' value="<?php echo set_value('nama', isset($jalan->nama) ? $jalan->nama : ''); ?>" />
+                    <input id='nama' type='text' name='nama' maxlength='100' value="<?php echo set_value('nama', isset($jalan->nama) ? $jalan->nama : ''); ?>" />
                     <span class='help-inline'><?php echo form_error('nama'); ?></span>
                 </div>
             </div>
@@ -78,18 +78,32 @@ echo Assets::js(
             <div class="control-group<?php echo form_error('armada') ? ' error' : ''; ?>">
                 <?php echo form_label(lang('jalan_field_armada'), 'armada', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <?php echo form_textarea(array('name' => 'armada', 'id' => 'armada', 'rows' => '5', 'cols' => '80', 'value' => set_value('armada', isset($jalan->armada) ? $jalan->armada : ''))); ?>
+                    <select name="armada">
+                     <option value="L-300" <?= (set_value('armada', $jalan->armada) == "L-300") ? 'selected' : ''; ?> >L-300</option>
+                     <option value="Dump Truck" <?= (set_value('armada',$jalan->armada) == "Dump Truck") ? 'selected' : ''; ?> >Dump Truck</option>
+                     </select>
                     <span class='help-inline'><?php echo form_error('armada'); ?></span>
                 </div>
             </div>
             
-            
-
-            <div class="control-group<?php echo form_error('html') ? ' error' : ''; ?>">
-                <?php echo form_label(lang('jalan_field_html'), 'html', array('class' => 'control-label')); ?>
+            <div class="control-group<?php echo form_error('kecamatan') ? ' error' : ''; ?>">
+                <?php echo form_label("Kecamatan", 'kecamatan', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <?php echo form_textarea(array('name' => 'html', 'id' => 'html', 'rows' => '5', 'cols' => '80', 'value' => set_value('html', isset($jalan->html) ? $jalan->html : ''))); ?>
-                    <span class='help-inline'><?php echo form_error('html'); ?></span>
+                    <select name="kecamatan" id="kecamatan">
+                     <option value="Bukit Raya" <?= (set_value('kecamatan', $jalan->kecamatan) == "Bukit Raya") ? 'selected' : ''; ?>>Bukit Raya</option>
+                     <option value="Lima Puluh" <?= (set_value('kecamatan', $jalan->kecamatan) == "Lima Puluh") ? 'selected' : ''; ?>>Lima Puluh</option>
+                     <option value="Marpoyan" <?= (set_value('kecamatan', $jalan->kecamatan) == "Marpoyan") ? 'selected' : ''; ?>>Marpoyan</option>
+                     <option value="Payung Sekaki" <?= (set_value('kecamatan', $jalan->kecamatan) == "Payung Sekaki") ? 'selected' : ''; ?>>Payung Sekaki</option>
+                     <option value="Pekanbaru Kota" <?= (set_value('kecamatan', $jalan->kecamatan) == "Pekanbaru Kota") ? 'selected' : ''; ?>>Pekanbaru Kota</option>
+                     <option value="Rumbai Pesisir" <?= (set_value('kecamatan', $jalan->kecamatan) == "Rumbai Pesisir") ? 'selected' : ''; ?>>Rumbai Pesisir</option>
+                     <option value="Rumbai" <?= (set_value('kecamatan', $jalan->kecamatan) == "Rumbai") ? 'selected' : ''; ?>>Rumbai</option>
+                     <option value="Sail" <?= (set_value('kecamatan', $jalan->kecamatan) == "Sail") ? 'selected' : ''; ?>>Sail</option>
+                     <option value="Senapelan" <?= (set_value('kecamatan', $jalan->kecamatan) == "Senapelan") ? 'selected' : ''; ?>>Senapelan</option>
+                     <option value="Sukajadi" <?= (set_value('kecamatan', $jalan->kecamatan) == "Sukajadi") ? 'selected' : ''; ?>>Sukajadi</option>
+                     <option value="Tampan" <?= (set_value('kecamatan', $jalan->kecamatan) == "Tampan") ? 'selected' : ''; ?>>Tampan</option>
+                     <option value="Tenayan Raya" <?= (set_value('kecamatan', $jalan->kecamatan) == "Tenayan Raya") ? 'selected' : ''; ?>>Tenayan Raya</option>
+                    </select>
+                    <span class='help-inline'><?php echo form_error('kecamatan'); ?></span>
                 </div>
             </div>
 
@@ -98,6 +112,22 @@ echo Assets::js(
                 <div class='controls'>
                     <?php echo form_textarea(array('name' => 'geom', 'id' => 'geom', 'rows' => '5', 'cols' => '80', 'value' => set_value('geom', isset($jalan->geom) ? $jalan->geom : ''))); ?>
                     <span class='help-inline'><?php echo form_error('geom'); ?></span>
+                </div>
+            </div>
+            
+            <div class="control-group<?php echo form_error('jadwal_mulai') ? ' error' : ''; ?>">
+                <?php echo form_label("Jadwal Mulai", 'jadwal_mulai', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <input id='jadwal_mulai' type='time' name='jadwal_mulai' maxlength='50' pattern="[0-9]{2}:[0-9]{2}" value="<?php echo set_value('jadwal_mulai', isset($jalan->jadwal_mulai) ? $jalan->jadwal_mulai : ''); ?>" />
+                    <span class='help-inline'><?php echo form_error('jadwal_mulai'); ?></span>
+                </div>
+            </div>
+            
+            <div class="control-group<?php echo form_error('jadwal_selesai') ? ' error' : ''; ?>">
+                <?php echo form_label("Jadwal selesai", 'jadwal_selesai', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <input id='jadwal_selesai' type='time' name='jadwal_selesai' maxlength='50' pattern="[0-9]{2}:[0-9]{2}" value="<?php echo set_value('jadwal_selesai', isset($jalan->jadwal_selesai) ? $jalan->jadwal_selesai : ''); ?>" />
+                    <span class='help-inline'><?php echo form_error('jadwal_selesai'); ?></span>
                 </div>
             </div>
         </fieldset>

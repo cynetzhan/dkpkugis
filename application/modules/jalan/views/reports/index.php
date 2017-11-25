@@ -22,7 +22,7 @@ if ($can_delete) {
 					<?php endif;?>
 					
 					<th><?php echo lang('jalan_field_nama'); ?></th>
-					<th><?php echo lang('jalan_field_html'); ?></th>
+					<th><?php echo lang('jalan_field_armada'); ?></th>
 					<th><?php echo lang('jalan_field_geom'); ?></th>
 				</tr>
 			</thead>
@@ -53,7 +53,7 @@ if ($can_delete) {
 				<?php else : ?>
 					<td><?php e($record->nama); ?></td>
 				<?php endif; ?>
-					<td><?php e($record->html); ?></td>
+					<td><?php e($record->armada); ?></td>
 					<td><?php e($record->geom); ?></td>
 				</tr>
 				<?php

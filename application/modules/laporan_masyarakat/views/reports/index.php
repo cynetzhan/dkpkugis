@@ -27,8 +27,10 @@ if ($can_delete) {
 					<th><?php echo lang('laporan_masyarakat_field_kelurahan_laporanmas'); ?></th>
 					<th><?php echo lang('laporan_masyarakat_field_kecamatan_laporanmas'); ?></th>
 					<th><?php echo lang('laporan_masyarakat_field_isi_laporanmas'); ?></th>
-					<th><?php echo lang('laporan_masyarakat_field_foto_laporanmas'); ?></th>
+					<!--th><?php //echo lang('laporan_masyarakat_field_foto_laporanmas'); ?></th-->
 					<th><?php echo lang('laporan_masyarakat_field_id_tps'); ?></th>
+     <th>Status Laporan</th>
+     <th>Aksi</th>
 				</tr>
 			</thead>
 			<?php if ($has_records) : ?>
@@ -62,9 +64,16 @@ if ($can_delete) {
 					<td><?php e($record->email_laporanmas); ?></td>
 					<td><?php e($record->kelurahan_laporanmas); ?></td>
 					<td><?php e($record->kecamatan_laporanmas); ?></td>
-					<td><?php e($record->isi_laporanmas); ?></td>
-					<td><?php e($record->foto_laporanmas); ?></td>
-					<td><?php e($record->id_tps); ?></td>
+					<td><?php text_preview(e($record->isi_laporanmas),3); ?></td>
+					<!--td><?php //e($record->foto_laporanmas); ?></td-->
+					<td><?php if(count(explode('#',$record->id_tps)) > 1){
+      $coord=explode('#', $record->id_tps);
+      echo "Tidak diketahui <br><small>(".$coord[0]." ,".$coord[1].")</small>";
+     } else { 
+      echo $tpskita[$record->id_tps]['nama']." <br><small>(".$tpskita[$record->id_tps]['coord'].")</small>";
+     } ?></td>
+     <td><?= ($record->status_laporan)?"Telah Dibalas":"Belum Dibalas";?></td>
+					<td><?php echo anchor(SITE_AREA . '/reports/laporan_masyarakat/view/' . $record->id_laporanmas, '<span>Lihat</span> ' ); ?></td>
 				</tr>
 				<?php
 					endforeach;

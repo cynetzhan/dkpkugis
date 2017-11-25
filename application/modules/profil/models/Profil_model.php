@@ -2,8 +2,8 @@
 
 class Profil_model extends BF_Model
 {
-    protected $table_name	= 'profil';
-	protected $key			= 'id_profil';
+    protected $table_name	= 'informasi';
+	protected $key			= 'id_informasi';
 	protected $date_format	= 'datetime';
 
 	protected $log_user 	= false;
@@ -40,17 +40,17 @@ class Profil_model extends BF_Model
 	// be updating a portion of the data.
 	protected $validation_rules 		= array(
 		array(
-			'field' => 'judul_profil',
+			'field' => 'judul_informasi',
 			'label' => 'lang:profil_field_judul_profil',
 			'rules' => 'required|max_length[30]',
 		),
 		array(
-			'field' => 'tgl_terbit_profil',
+			'field' => 'tgl_terbit_informasi',
 			'label' => 'lang:profil_field_tgl_terbit_profil',
 			'rules' => 'required',
 		),
 		array(
-			'field' => 'isi_profil',
+			'field' => 'isi_informasi',
 			'label' => 'lang:profil_field_isi_profil',
 			'rules' => '',
 		),

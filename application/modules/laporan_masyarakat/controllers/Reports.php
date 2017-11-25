@@ -63,12 +63,19 @@ class Reports extends Admin_Controller
         }
         
         
-        
+        $this->load->model('tps/tps_model');
+        $tps_raw = $this->tps_model->find_all();
+        $tps = array();
+        foreach($tps_raw as $tp){
+         $tps[$tp->id]['nama'] = $tp->nama;
+         $tps[$tp->id]['coord'] = $tp->lat." , ".$tp->long;
+        }
         $records = $this->laporan_masyarakat_model->find_all();
 
         Template::set('records', $records);
+        Template::set('tpskita', $tps);
         
-    Template::set('toolbar_title', lang('laporan_masyarakat_manage'));
+        Template::set('toolbar_title', lang('laporan_masyarakat_manage'));
 
         Template::render();
     }
@@ -147,6 +154,65 @@ class Reports extends Admin_Controller
         Template::set('toolbar_title', lang('laporan_masyarakat_edit_heading'));
         Template::render();
     }
+	
+	public function view($id) {
+		$this->load->model('tps/tps_model');
+  $tps_raw = $this->tps_model->find_all();
+  $tps = array();
+  foreach($tps_raw as $tp){
+   $tps[$tp->id]['nama'] = $tp->nama;
+   $tps[$tp->id]['coord'] = $tp->lat." , ".$tp->long;
+  }
+  Template::set('laporan_masyarakat', $this->laporan_masyarakat_model->find($id));
+  Template::set('tpskita', $tps);
+  Template::set('toolbar_title', 'Lihat Laporan Masyarakat');
+		Template::render();
+	}
+ 
+ public function balas($id){
+  // if a save posted
+  if(isset($_POST['save'])){
+   $this->load->library('emailer/Emailer');
+   $email = array(
+    'to' => $this->input->post('email_to'),
+    'subject' => $this->input->post('email_subject'),
+    'message' => $this->input->post('email_content')
+   );
+   $result = $this->emailer->send($email, true);
+   if($result){
+    $data = array(
+     'balasan' => json_encode($email),
+     'tanggal_balasan' => date('Y-m-d'),
+     'status_laporan' => 1
+    );
+    $this->db->where('id_laporanmas',$id);
+    $hasil = $this->db->update('bf_laporan_masyarakat', $data);
+    Template::set_message("Email Balasan Telah Diantrikan.", 'success');
+   } else {
+    Template::set_message("Terdapat Kesalahan! Email Balasan Gagal Terkirim.", 'error');
+   }
+   redirect(SITE_AREA . '/reports/laporan_masyarakat/view/'.$id);
+   //echo var_dump($this->laporan_masyarakat_model->error);
+   //echo var_dump($hasil);
+  }
+  // view 
+  $this->load->model('tps/tps_model');
+  $tps_raw = $this->tps_model->find_all();
+  $tps = array();
+  foreach($tps_raw as $tp){
+   $tps[$tp->id]['nama'] = $tp->nama;
+   $tps[$tp->id]['coord'] = $tp->lat." , ".$tp->long;
+  }
+  $lapmas = $this->laporan_masyarakat_model->find($id);
+  $subj = "Terima Kasih telah melapor, ".$lapmas->nama_pe_laporanmas."!";
+  $cont = "<h1>Halo, ".$lapmas->nama_pe_laporanmas."</h1>  <h3 align='justify'>Terima Kasih atas kontribusi Anda dengan melaporkan masalah mengenai persampahan kepada Kami. Laporan Anda pada tanggal ".tanggal($lapmas->tgl_laporanmas)." akan kami tanggulangi secepatnya. Kami akan berusaha menciptakan Kota Pekanbaru yang bersih dan nyaman untuk Anda tinggali. Kami berharap Anda juga tidak bosan melaporkan masalah persampahan di lingkungan sekitar Anda.</h3> <h3>Salam,</h3>  <h3>DKP Kota Pekanbaru</h3>";
+  Template::set('email_content', $cont);
+  Template::set('email_subject', $subj);
+  Template::set('laporan_masyarakat', $lapmas);
+  Template::set('tpskita', $tps);
+  Template::set('toolbar_title', 'Lihat Laporan Masyarakat');
+		Template::render();
+ }
 
     //--------------------------------------------------------------------------
     // !PRIVATE METHODS

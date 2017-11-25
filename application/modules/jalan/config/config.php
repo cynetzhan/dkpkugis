@@ -2,7 +2,7 @@
 
 $config['module_config'] = array(
 	'description'	=> 'Rute Angkutan',
-	'name'		    => 'jalan',
+	'name'		    => 'Rute Angkutan',
      /*
       * Replace the 'name' entry above with this entry and create the entry in
       * the application_lang file for localization/translation support in the

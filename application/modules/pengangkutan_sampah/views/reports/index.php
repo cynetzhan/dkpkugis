@@ -56,6 +56,9 @@ if ($can_delete) {
 			<tbody>
    <?php foreach($records as $rc){ ?>
     <tr>
+     <?php if ($can_delete) : ?>
+					<td class='column-check'><input type='checkbox' name='checked[]' value='<?php echo $record->id_laporan; ?>' /></td>
+					<?php endif;?>
      <td><?= $rc->display_name ?></td>
      <td><?= $rc->nama ?></td>
      <td><?= tanggal($rc->tanggal_angkut) ?></td>

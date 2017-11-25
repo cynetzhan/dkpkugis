@@ -22,8 +22,9 @@ if ($can_delete) {
 					<?php endif;?>
 					
 					<th><?php echo lang('profil_field_judul_profil'); ?></th>
+     <th>Kategori Informasi</th>
 					<th><?php echo lang('profil_field_tgl_terbit_profil'); ?></th>
-					<th><?php echo lang('profil_field_isi_profil'); ?></th>
+					<!--th><?php echo lang('profil_field_isi_profil'); ?></th-->
 				</tr>
 			</thead>
 			<?php if ($has_records) : ?>
@@ -45,16 +46,17 @@ if ($can_delete) {
 				?>
 				<tr>
 					<?php if ($can_delete) : ?>
-					<td class='column-check'><input type='checkbox' name='checked[]' value='<?php echo $record->id_profil; ?>' /></td>
+					<td class='column-check'><input type='checkbox' name='checked[]' value='<?php echo $record->id_informasi; ?>' /></td>
 					<?php endif;?>
 					
 				<?php if ($can_edit) : ?>
-					<td><?php echo anchor(SITE_AREA . '/content/profil/edit/' . $record->id_profil, '<span class="icon-pencil"></span> ' .  $record->judul_profil); ?></td>
+					<td><?php echo anchor(SITE_AREA . '/content/profil/edit/' . $record->id_informasi, '<span class="icon-pencil"></span> ' .  $record->judul_informasi); ?></td>
 				<?php else : ?>
-					<td><?php e($record->judul_profil); ?></td>
+					<td><?php e($record->judul_informasi); ?></td>
 				<?php endif; ?>
-					<td><?php e($record->tgl_terbit_profil); ?></td>
-					<td><?php e($record->isi_profil); ?></td>
+    <td><?php e($record->kategori_informasi); ?></td>
+					<td><?php e(tanggal($record->tgl_terbit_informasi)); ?></td>
+					<!--td><?php //e($record->isi_informasi); ?></td-->
 				</tr>
 				<?php
 					endforeach;

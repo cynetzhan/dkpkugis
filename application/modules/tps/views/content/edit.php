@@ -119,6 +119,7 @@ echo Assets::js( array('leaflet-src.js'
             <div class="control-group">
                 <?php echo form_label('Foto TPS', 'images', array('class' => 'control-label')); ?>
                 <div class='controls'>
+                    <input type="hidden" name="file_foto" value="<?= $tps->file_foto ?>" />
                     <input id='images' type='file' name='images'/>
                 </div>
             </div>

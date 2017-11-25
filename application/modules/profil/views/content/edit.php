@@ -1,5 +1,6 @@
 <?php
-
+Assets::add_js('tinymce/tinymce.min.js');
+Assets::add_js("tinymce.init({selector:'textarea#isi_informasi'});", 'inline');
 if (validation_errors()) :
 ?>
 <div class='alert alert-block alert-error fade in'>
@@ -12,36 +13,65 @@ if (validation_errors()) :
 <?php
 endif;
 
-$id = isset($profil->id_profil) ? $profil->id_profil : '';
+$id = isset($profil->id_informasi) ? $profil->id_informasi : '';
 
 ?>
 <div class='admin-box'>
-    <h3>Profil</h3>
-    <?php echo form_open($this->uri->uri_string(), 'class="form-horizontal"'); ?>
+    <h3>Informasi Publik</h3>
+    <?php echo form_open_multipart($this->uri->uri_string(), 'class="form-horizontal"'); ?>
         <fieldset>
             
 
             <div class="control-group<?php echo form_error('judul_profil') ? ' error' : ''; ?>">
-                <?php echo form_label(lang('profil_field_judul_profil') . lang('bf_form_label_required'), 'judul_profil', array('class' => 'control-label')); ?>
+                <?php echo form_label(lang('profil_field_judul_profil') . lang('bf_form_label_required'), 'judul_informasi', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <input id='judul_profil' type='text' required='required' name='judul_profil' maxlength='30' value="<?php echo set_value('judul_profil', isset($profil->judul_profil) ? $profil->judul_profil : ''); ?>" />
-                    <span class='help-inline'><?php echo form_error('judul_profil'); ?></span>
+                    <input id='judul_informasi' type='text' required='required' name='judul_informasi' maxlength='30' value="<?php echo set_value('judul_informasi', isset($profil->judul_informasi) ? $profil->judul_informasi : ''); ?>" />
+                    <span class='help-inline'><?php echo form_error('judul_informasi'); ?></span>
+                </div>
+            </div>
+            
+            <div class="control-group<?php echo form_error('kategori_infomasi') ? ' error' : ''; ?>">
+                <?php echo form_label("Kategori", 'kategori_informasi', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <select name="kategori_informasi" id="kategori_informasi">
+                     <option value="Profil DKP" <?= (set_value('kategori_informasi',$profil->kategori_informasi) == 'Profil DKP') ? 'selected' : '' ?>>Profil DKP</option>
+                     <option value="Informasi Publik" <?= (set_value('kategori_informasi',$profil->kategori_informasi) == 'Informasi Publik') ? 'selected' : '' ?>>Informasi Publik</option>
+                    </select>
+                    <span class='help-inline'><?php echo form_error('kategori_informasi'); ?></span>
                 </div>
             </div>
 
-            <div class="control-group<?php echo form_error('tgl_terbit_profil') ? ' error' : ''; ?>">
-                <?php echo form_label(lang('profil_field_tgl_terbit_profil') . lang('bf_form_label_required'), 'tgl_terbit_profil', array('class' => 'control-label')); ?>
+            <div class="control-group<?php echo form_error('tgl_terbit_informasi') ? ' error' : ''; ?>">
+                <?php echo form_label(lang('profil_field_tgl_terbit_profil') . lang('bf_form_label_required'), 'tgl_terbit_informasi', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <input id='tgl_terbit_profil' type='text' required='required' name='tgl_terbit_profil' maxlength='1' value="<?php echo set_value('tgl_terbit_profil', isset($profil->tgl_terbit_profil) ? $profil->tgl_terbit_profil : ''); ?>" />
-                    <span class='help-inline'><?php echo form_error('tgl_terbit_profil'); ?></span>
+                    <input id='tgl_terbit_informasi' type='text' required='required' name='tgl_terbit_informasi' maxlength='1' value="<?php echo set_value('tgl_terbit_informasi', isset($profil->tgl_terbit_informasi) ? $profil->tgl_terbit_informasi : ''); ?>" />
+                    <span class='help-inline'><?php echo form_error('tgl_terbit_informasi'); ?></span>
                 </div>
             </div>
 
-            <div class="control-group<?php echo form_error('isi_profil') ? ' error' : ''; ?>">
-                <?php echo form_label(lang('profil_field_isi_profil'), 'isi_profil', array('class' => 'control-label')); ?>
+            <div class="control-group<?php echo form_error('isi_informasi') ? ' error' : ''; ?>">
+                <?php echo form_label(lang('profil_field_isi_profil'), 'isi_informasi', array('class' => 'control-label')); ?>
                 <div class='controls'>
-                    <?php echo form_textarea(array('name' => 'isi_profil', 'id' => 'isi_profil', 'rows' => '5', 'cols' => '80', 'value' => set_value('isi_profil', isset($profil->isi_profil) ? $profil->isi_profil : ''))); ?>
-                    <span class='help-inline'><?php echo form_error('isi_profil'); ?></span>
+                 <textarea name="isi_informasi" rows="8" id="isi_informasi">
+                  <?= set_value('isi_informasi', isset($profil->isi_informasi) ? $profil->isi_informasi : '') ?>
+                 </textarea>
+                    
+                    <span class='help-inline'><?php echo form_error('isi_informasi'); ?></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <?php echo form_label('Foto Informasi', 'images', array('class' => 'control-label')); ?>
+                <div class='controls'>
+                    <input type="hidden" name="foto_informasi" value="<?= $profil->foto_informasi ?>"/>
+                    <input id='images' type='file' name='images'/>
+                </div>
+                <label class="control-label">Foto Informasi Saat Ini</label>
+                <div class="controls">
+                <?php if(file_exists('data/images/'.$profil->foto_informasi)) { ?>
+                <img src="<?= base_url('data/images/'.$profil->foto_informasi) ?>" alt='foto informasi' />
+                <?php } else { ?>
+                <h4>Belum ada foto</h4>
+                <?php } ?>
                 </div>
             </div>
         </fieldset>

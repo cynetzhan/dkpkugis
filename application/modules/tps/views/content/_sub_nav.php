@@ -10,6 +10,9 @@ $areaUrl = SITE_AREA . '/content/tps';
             <?php echo lang('tps_list'); ?>
         </a>
 	</li>
+ <li>
+  <a href="<?= base_url('admin/content/tps/downloadPdf'); ?>" id="pdf">Unduh PDF</a>
+ </li>
 	<?php if ($this->auth->has_permission('Tps.Content.Create')) : ?>
 	<li<?php echo $checkSegment == 'create' ? ' class="active"' : ''; ?>>
 		<a href="<?php echo site_url($areaUrl . '/create'); ?>" id='create_new'>

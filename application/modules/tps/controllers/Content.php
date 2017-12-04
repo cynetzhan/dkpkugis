@@ -73,6 +73,11 @@ class Content extends Admin_Controller
         Template::render();
     }
     
+    public function downloadPdf(){
+     $row = $this->tps_model->find_all();
+     $this->load->view('content/pdf',array('hasil'=>$row));
+    }
+    
     /**
      * Create a tps object.
      *

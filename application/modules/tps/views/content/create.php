@@ -19,11 +19,11 @@ $id = isset($tps->id) ? $tps->id : '';
 
 // add CSS dan JavaScript yang digunakan untuk Create Feature
 
-echo Assets::css('leaflet.css');
+echo Assets::css('leaflet-0.7.css');
 echo Assets::css('leaflet.draw.css');
 
 echo Assets::js( 
-	array('leaflet-src.js'
+	array('leaflet-0.7.js'
 		, 'Leaflet.draw.js'
 		, 'Leaflet.Draw.Event.js'
 

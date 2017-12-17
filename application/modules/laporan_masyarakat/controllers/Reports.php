@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
-
+use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Reports controller
  */
@@ -178,7 +178,30 @@ class Reports extends Admin_Controller
     'subject' => $this->input->post('email_subject'),
     'message' => $this->input->post('email_content')
    );
-   $result = $this->emailer->send($email, true);
+   //$result = $this->emailer->send($email, true);
+   $mailib = new PHPMailer;
+   $mailib->isSMTP();
+   $mailib->SMTPDebug = 2;
+   $mailib->Debugoutput = 'html';
+   $mailib->SMTPOptions = array(
+     'ssl' => array(
+       'verify_peer' => false,
+       'verify_peer_name' => false,
+       'allow_self_signed' => true
+      )
+  );
+   $mailib->Host = 'smtp.gmail.com';
+   $mailib->Port = 587;
+   $mailib->SMTPSecure = 'tls';
+   $mailib->SMTPAuth = true;
+   $mailib->Username = $this->config->item('mail.username');
+   $mailib->Password = $this->config->item('mail.password');
+   $mailib->setFrom($this->config->item('mail.set_from_address'), $this->config->item('mail.display_name'));
+   $mailib->addAddress($email['to']);
+   $mailib->Subject = $email['subject'];
+   $mailib->msgHTML($email['message']);
+   $mailib->AltBody = 'This is a plain-text message body';
+   $result = $mailib->send();
    if($result){
     $data = array(
      'balasan' => json_encode($email),
@@ -187,7 +210,7 @@ class Reports extends Admin_Controller
     );
     $this->db->where('id_laporanmas',$id);
     $hasil = $this->db->update('bf_laporan_masyarakat', $data);
-    Template::set_message("Email Balasan Telah Diantrikan.", 'success');
+    Template::set_message("Email Balasan Telah Dikirim.", 'success');
    } else {
     Template::set_message("Terdapat Kesalahan! Email Balasan Gagal Terkirim.", 'error');
    }

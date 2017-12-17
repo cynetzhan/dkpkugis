@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') || exit('No direct script access allowed');
+use PHPMailer\PHPMailer\PHPMailer;
 /**
  * Bonfire
  *
@@ -34,7 +35,8 @@ class Settings extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
-
+        
+        
         $this->auth->restrict('Site.Settings.View');
         $this->auth->restrict('Bonfire.Emailer.Manage');
 
@@ -140,22 +142,44 @@ class Settings extends Admin_Controller
         if (! isset($_POST['test'])) {
             $this->security->csrf_show_error();
         }
+        $GLOBALS['msgdebug'] = '';
+        $mailib = new PHPMailer;
+        $mailib->isSMTP();
+        $mailib->SMTPDebug = 0;
+        $mailib->Debugoutput = 'html';
+        $mailib->SMTPOptions = array(
+          'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+           )
+       );
+        $mailib->Host = 'smtp.gmail.com';
+        $mailib->Port = 587;
+        $mailib->SMTPSecure = 'tls';
+        $mailib->SMTPAuth = true;
+        $mailib->Username = $this->config->item('mail.username');
+        $mailib->Password = $this->config->item('mail.password');
+        $mailib->setFrom($this->config->item('mail.set_from_address'), $this->config->item('mail.display_name'));
+        $mailib->addAddress($this->input->post('email'));
+        $mailib->Subject = lang('emailer_test_mail_subject');
+        $mailib->msgHTML(lang('emailer_test_mail_body'));
+        $mailib->AltBody = 'This is a plain-text message body';
 
-        $this->load->library('emailer');
+        /* $this->load->library('emailer');
         $this->emailer->enable_debug(true);
 
         $data = array(
             'to'      => $this->input->post('email'),
             'subject' => lang('emailer_test_mail_subject'),
             'message' => lang('emailer_test_mail_body'),
-         );
-
-        $success = $this->emailer->send($data, false);
-
+         ); */
+         
+        //$success = $this->emailer->send($data, false);
+        $success = $mailib->send();
         Template::set('toolbar_title', lang('emailer_email_test'));
         Template::set('success', $success);
-        Template::set('debug', $this->emailer->debug_message);
-
+        Template::set('debug', $mailib->ErrorInfo);
         Template::render();
     }
 
